@@ -1,0 +1,11 @@
+[package]
+name = "roll"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+dicerollerlib = { git = "https://github.com/Tavola-Redonda/dicerollerlib", version = "0.1.0" }
+command_parser = { path = "../discord-bot/command_parser/" }
+regex = "1.10.2"
