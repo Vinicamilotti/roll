@@ -7,5 +7,5 @@ edition = "2021"
 
 [dependencies]
 dicerollerlib = { git = "https://github.com/Tavola-Redonda/dicerollerlib", version = "0.1.0" }
-command_parser = { path = "../discord-bot/command_parser/" }
+command_parser = { git = "https://github.com/Tavola-Redonda/command_parser/", version = "0.1.0" }
 regex = "1.10.2"

@@ -20,6 +20,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 [[package]]
 name = "command_parser"
 version = "0.1.0"
+source = "git+https://github.com/Tavola-Redonda/command_parser/#f9c60663a06013d859b8f127ec31aceeb874c30a"
 
 [[package]]
 name = "dicerollerlib"
