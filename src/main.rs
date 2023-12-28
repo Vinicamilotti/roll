@@ -3,7 +3,7 @@
 use command_parser::generic_parser;
 use core::f32;
 use dicerollerlib::roll_request;
-use dicerollerlib::rolltypes::{ModifierOperator, Operators, RollRequest};
+use dicerollerlib::rolltypes::{ModifierOperator, Operators, RollRequest, RollResult};
 use std::env;
 
 fn generate_modfiers(arr: &Vec<Vec<&str>>) -> Vec<ModifierOperator> {
@@ -37,18 +37,16 @@ fn main() {
         let dice_args = generic_parser(dice_args, vec!['d']);
         parsed.remove(0);
 
-        let modifiers: Option<Vec<ModifierOperator>>;
-
-        if parsed.len() > 1 {
-            let arg_mods: Vec<Vec<&str>> = parsed
-                .into_iter()
-                .array_chunks::<2>()
-                .map(|sub| sub.into())
-                .collect();
-            modifiers = Option::from(generate_modfiers(&arg_mods));
-        } else {
-            modifiers = None;
-        }
+        let modifiers: Option<Vec<ModifierOperator>> = match parsed.len() {
+            n if n > 1 => Option::from(generate_modfiers(
+                &parsed
+                    .into_iter()
+                    .array_chunks::<2>()
+                    .map(|sub| sub.into())
+                    .collect(),
+            )),
+            _ => None,
+        };
 
         let req = RollRequest {
             dice_qnt: dice_args[0].parse().unwrap(),
@@ -58,15 +56,23 @@ fn main() {
         requests.push(req);
     }
 
-    let results = roll_request(requests);
+    let results: Vec<RollResult> = roll_request(requests);
 
     for pool in results {
         println!("Rolling {}:", pool.pool);
         println!("==========================");
         for roll in pool.rolls {
+            let extra_message: &str = match roll.dice_type {
+                20 => match roll.roll {
+                    20 => "Critical Success",
+                    1 => "Critical Failure",
+                    _ => "",
+                },
+                _ => "",
+            };
             println!(
-                "Roll {}: {} (D{})",
-                roll.roll_number, roll.roll, roll.dice_type
+                "Roll {}: {} (D{}) {}",
+                roll.roll_number, roll.roll, roll.dice_type, extra_message
             );
         }
         println!("Final result: {}", pool.sum)
